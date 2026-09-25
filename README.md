@@ -23,23 +23,21 @@ syntaxe mineures avant la première compilation.
    plaçant manuellement sur l'appareil de test pendant le développement
    (`adb push pages/ /sdcard/Android/data/com.warsh.mushaf/files/pages/`).
 
-3. **Audio Al Kouchi** — vos fichiers mp3 (déjà découpés par sourate/verset) doivent être
-   copiés vers `.../files/audio_alkouchi/` avec le nommage `SSS_AAA.mp3` (3 chiffres
-   sourate, 3 chiffres verset — ex. `002_255.mp3`). **Si vos fichiers ont un autre nom**,
-   ouvrez `AudioRepository.kt` et changez seulement la fonction `localFileName()`.
+3. **Audio (Al Kouchi / Kazabri)** — rien à copier. Ces deux récitateurs n'existent pas
+   sur verse.mp3quran.net (un mp3 par verset) ; l'app utilise leurs mp3 par sourate sur
+   mp3quran.net (`koshi/`, `omar_warsh/`, voir `Reciter.kt`) et le minutage officiel de
+   chaque verset (API `ayat_timing`, read 16 et 80). Chaque verset est lu comme un extrait
+   du mp3 de sa sourate : seuls les octets des versets écoutés sont téléchargés, puis
+   gardés dans un cache disque (`AudioCache`, 2 Go max) pour la relecture hors-ligne.
 
 4. **Icône de l'application** — non fournie ici (nécessite plusieurs résolutions). Dans
    Android Studio : clic droit sur `res` → New → Image Asset, pour générer les
    `mipmap/ic_launcher*`.
 
-5. **Kazabri (عمر القزابري)** — aucun fichier local n'a été fourni. L'app interroge en
-   direct l'API publique **mp3quran.net** (`AudioRepository.resolveKazabriServer()`) pour
-   trouver son moshaf en rewaya Warsh, puis télécharge et met en cache les mp3 par
-   SOURATE ENTIÈRE (pas par verset — voir limite ci-dessous). Recherche effectuée durant
-   ce travail : sa présence sur mp3quran.net n'a pas pu être confirmée à 100 % (l'API
-   liste plus de 600 récitateurs) ; au premier essai réel, si la recherche échoue, un
-   message d'erreur clair s'affiche et vous pourrez soit corriger le mot-clé de recherche
-   dans le code, soit fournir vous-même une autre source.
+5. **Métadonnées des pages** — `mushaf_531_database.json` ne sert plus qu'à la liste des
+   numéros de page : ses champs `startAyah`/`endAyah` sont faux. Les versets de chaque
+   page sont déduits des fichiers `texte_page/page_NNN.txt` (`MetadataLoader`), une fois,
+   puis mis en cache dans `files/page_ranges_*.txt`.
 
 ## Ce qui est fait (Phase 1)
 
@@ -50,8 +48,11 @@ syntaxe mineures avant la première compilation.
 | Page active + 5 avant + 5 après en mémoire | `PageCacheManager.kt` | Recycle explicitement les `Bitmap` hors fenêtre (pas seulement une limite de taille comme `LruCache`) |
 | Adaptation à l'écran, marges système respectées | `MainActivity.applySystemBarMargins()` | Utilise `WindowInsetsCompat` — pas de mode plein écran "edge-to-edge" |
 | Bouton réglages en haut → menu de configuration | `SettingsBottomSheet.kt` | Feuille de bas d'écran (Material) |
-| Lecture audio page / depuis verset choisi | `AudioController.kt`, `AudioRepository.kt` | Local (Al Kouchi) ou téléchargé à la demande et mis en cache (Kazabri) |
-| Répétition + vitesse configurables | `AudioController` (ExoPlayer `PlaybackParameters`), `SettingsBottomSheet` | |
+| Récitation : choix du lecteur, page courante + suite, ou plage de versets | `RecitationBottomSheet.kt`, `AudioController.kt` | Le lecteur tourne les pages au fil de la récitation ; barre lecture/pause/arrêt en bas |
+| Répétition (chaque verset / plage entière) + vitesse x0.5–x2 | `RecitationBottomSheet`, `AudioController` | |
+| Aller à une page (appui sur le numéro de page) | `MainActivity.showGoToPageDialog()` | |
+| Fihris des sourates | `MainActivity.showSurahList()` | |
+| Recherche d'un mot (sans tashkil, tolérante hamza/alif) → ouverture de la page | `SearchActivity.kt`, `QuranTextRepository.search()` | Tests : `QuranSearchTest` |
 
 ## Ce qui est fait (Phase 2 — squelette à valider)
 
@@ -77,7 +78,5 @@ syntaxe mineures avant la première compilation.
 - Lecture audio en arrière-plan / contrôles à l'écran verrouillé (nécessite un
   `MediaSessionService` Media3 complet, retiré du manifeste pour rester honnête sur ce
   qui est réellement implémenté).
-- Sélecteur sourate/verset pour "lecture à partir de" (UI non fournie, seule la logique
-  `AudioController.playFrom()` existe).
-- Barre de progression / contrôles pause-reprise dans `bottomBar` (le conteneur existe
-  dans `activity_main.xml`, vide pour l'instant).
+- Surlignage du verset en cours sur l'image de la page (nécessiterait les coordonnées
+  des versets sur chaque image).
