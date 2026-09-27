@@ -113,7 +113,7 @@ Application entièrement gratuite.
 | Catégorie | **Livres et références** (ou « Éducation ») |
 | Tags suggérés | Coran, Religion, Éducation |
 | Gratuite / payante | **Gratuite** (obligatoire : licence de la police KFGQPC) |
-| E-mail de contact | *(votre adresse, visible publiquement sur la fiche)* |
+| E-mail de contact | *k.echakhaoui@gmail.com* |
 | Politique de confidentialité | *URL publique de `docs/privacy-policy.html` (voir § 7)* |
 
 ---
@@ -124,7 +124,7 @@ Application entièrement gratuite.
 |---|---|---|
 | Icône | 512 × 512 px, PNG 32 bits | ✅ **`docs/store/icon-512.png`** |
 | Image de présentation | 1024 × 500 px, JPG/PNG | ✅ **`docs/store/feature-graphic-1024x500.png`** |
-| Captures téléphone | 2 à 8, 16:9 ou 9:16, 320–3840 px | 1) page scannée 2) page composée + verset surligné 3) thème nuit 4) test de mémorisation en cours 5) rapport de test 6) réglages |
+| Captures téléphone | 2 à 8, grand côté ≤ 2 × petit côté, 320–3840 px | ✅ **`docs/store/screenshots/`** (1256 × 2512, ordre conseillé) : 1) page scannée 2) page composée + verset surligné 3) page complète thème nuit 4) écran du test 5) rapport de test 6) réglages 7) historique |
 
 ---
 
@@ -163,7 +163,7 @@ Le plus simple, dans votre dépôt GitHub :
 1. Copier `docs/privacy-policy.html` dans un dépôt public (par ex. `quran_pages`), sous le nom `privacy.html`.
 2. Dépôt → **Settings → Pages** → Source : branche `main`, dossier `/ (root)` → Save.
 3. URL obtenue : `https://kechakhaoui-svg.github.io/quran_pages/privacy.html`
-4. Remplacer d’abord `[البريد الإلكتروني للتواصل]` et `[adresse e-mail de contact]` par votre e-mail.
+4. ✅ Adresse de contact renseignée dans la politique : `k.echakhaoui@gmail.com`.
 
 ---
 
